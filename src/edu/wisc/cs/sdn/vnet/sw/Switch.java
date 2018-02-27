@@ -34,26 +34,28 @@ public class Switch extends Device
 	{
 		System.out.println("*** -> Received packet: " +
                 etherPacket.toString().replace("\n", "\n\t"));
-		
+		//Get the incoming nad destination MAC addresses
 		MACAddress incomingMAC = etherPacket.getSourceMAC();
 		MACAddress destinationMAC = etherPacket.getDestinationMAC();
+		//update the learning table with the incoming MAC address and the interface
 		updateTable(incomingMAC, inIface);
+		//look for matching interface for destination in learning table
 		Iface outIface = this.table.getMatchingIface(destinationMAC);
 		if (outIface == null) {
-			floodTheMessage(etherPacket,inIface);
+			floodTheMessage(etherPacket,inIface); // if no interface found, flood the message
 		}
-		else {
+		else { // send the message to the destination
 			boolean status = sendPacket(etherPacket, outIface);
 		}
 		
 		
 		
-		/********************************************************************/
-		/* TODO: Handle packets                                             */
-		
-		/********************************************************************/
+		//*****************************************************************/
 	}
-	
+	/**
+	 * function to send the message to all interfaces except the incoming interface
+	 * @param : etherPacket, the ethernet packet ; inIface, incoming interface
+	 */
 	private void floodTheMessage(Ethernet etherPacket, Iface inIface) {
 		for(String key: this.interfaces.keySet()) {
 			if (!this.interfaces.get(key).equals(inIface)) {
@@ -61,7 +63,10 @@ public class Switch extends Device
 			}
 		}
 	}
-	
+	/**
+	 * function to update the learning table
+	 * @param add, macaddress of the source; interFace, interface of the incoming macAddress
+	 */
 	private void updateTable(MACAddress add, Iface interFace){
 		this.table.updateTable(add, interFace);
 	}
