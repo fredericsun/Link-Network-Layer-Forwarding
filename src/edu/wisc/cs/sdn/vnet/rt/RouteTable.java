@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,7 +16,7 @@ import edu.wisc.cs.sdn.vnet.Iface;
 
 /**
  * Route table for a router.
- * @author Aaron Gember-Jacobson
+ * @author Aaron Gember-JacobsonO
  */
 public class RouteTable 
 {
@@ -39,9 +40,26 @@ public class RouteTable
         {
 			/*****************************************************************/
 			/* TODO: Find the route entry with the longest prefix match      */
-			
-			return null;
-			
+			RouteEntry max = new RouteEntry(0, 0, 0, null);
+			boolean flag = false;
+			int longest_mask = 0;
+			Iterator<RouteEntry> i = this.entries.iterator();
+			while(i.hasNext()) {
+			    RouteEntry cur = i.next();
+				int mask = cur.getMaskAddress();
+				int destination = cur.getDestinationAddress();
+				if ((ip & mask) == destination) {
+				    flag = true;
+					if (mask > longest_mask) {
+                        longest_mask = mask;
+                        max = cur;
+                    }
+				}
+			}
+			if (flag)
+			    return max;
+            else
+			    return null;
 			/*****************************************************************/
         }
 	}
