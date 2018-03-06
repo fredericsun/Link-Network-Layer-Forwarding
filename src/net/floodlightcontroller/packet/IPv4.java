@@ -297,7 +297,6 @@ public class IPv4 extends BasePacket {
         if (this.options != null)
             optionsLength = this.options.length / 4;
         this.headerLength = (byte) (5 + optionsLength);
-
         this.totalLength = (short) (this.headerLength * 4 + ((payloadData == null) ? 0
                 : payloadData.length));
 

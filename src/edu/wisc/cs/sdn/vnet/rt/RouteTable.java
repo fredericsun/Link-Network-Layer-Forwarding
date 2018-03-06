@@ -48,9 +48,9 @@ public class RouteTable
 			    RouteEntry cur = i.next();
 				int mask = cur.getMaskAddress();
 				int destination = cur.getDestinationAddress();
-				if ((ip & mask) == destination) {
+				if ((ip & mask) == (destination & mask)) {
 				    flag = true;
-					if (mask > longest_mask) {
+					if (Integer.bitCount(mask) > longest_mask) {
                         longest_mask = mask;
                         max = cur;
                     }
